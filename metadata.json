@@ -1,0 +1,6 @@
+{
+  "name": "LoveNest - Digital Memories & Love Gifts",
+  "description": "Turn your memories into something they can keep. Create beautiful personalized digital gifts, love letters, photo stories, and music surprises.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

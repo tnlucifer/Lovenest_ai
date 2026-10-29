@@ -1,0 +1,62 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidUserProfile(data) {
+      return data.uid is string &&
+             data.uid == request.auth.uid &&
+             data.email is string &&
+             data.email.size() <= 200;
+    }
+
+    function isValidGift(data) {
+      return (!('recipientName' in data) || data.recipientName is string) &&
+             (!('senderName' in data) || data.senderName is string);
+    }
+
+    match /users/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) && request.auth.uid == userId;
+      allow create, update: if isSignedIn() && isValidId(userId) && request.auth.uid == userId && isValidUserProfile(incoming());
+      allow list: if false;
+      allow delete: if false;
+    }
+
+    match /gifts/{giftId} {
+      // Recipient access: direct get or slug query for custom cards
+      allow get: if isValidId(giftId);
+      allow list: if true;
+
+      // Creators can save and update gifts seamlessly
+      allow create: if isValidId(giftId) && isValidGift(incoming());
+      allow update: if isValidId(giftId) && isValidGift(incoming());
+
+      // Only signed-in creator can delete
+      allow delete: if isSignedIn() && isValidId(giftId);
+
+      // Uploaded song audio chunks for full song storage without 1MB limit
+      match /audioChunks/{chunkId} {
+        allow get, list: if isValidId(giftId);
+        allow create, update, set: if isValidId(giftId);
+        allow delete: if isValidId(giftId);
+      }
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "User ID" },
+        "email": { "type": "string", "description": "Email address" },
+        "displayName": { "type": "string", "description": "Display name" },
+        "createdAt": { "type": "string", "description": "Account creation date" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Gift": {
+      "title": "Gift",
+      "description": "A digital memory gift package for a special recipient",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Gift unique ID" },
+        "ownerId": { "type": "string", "description": "UID of creator" },
+        "ownerEmail": { "type": "string", "description": "Email of creator" },
+        "recipientName": { "type": "string", "maxLength": 100, "description": "Recipient full or nickname" },
+        "senderName": { "type": "string", "maxLength": 100, "description": "Sender name or nickname" },
+        "relationship": { "type": "string", "maxLength": 50, "description": "Relationship type" },
+        "occasion": { "type": "string", "maxLength": 50, "description": "Occasion type" },
+        "customOccasion": { "type": "string", "description": "Custom occasion text" },
+        "message": { "type": "string", "maxLength": 15000, "description": "Core letter message" },
+        "reasons": { "type": "array", "description": "List of reasons" },
+        "story": { "type": "string", "description": "Story of meeting" },
+        "favoriteMemory": { "type": "string", "description": "Favorite memory" },
+        "futureDream": { "type": "string", "description": "Future dream" },
+        "specialDate": { "type": "string", "description": "Milestone date" },
+        "specialDateTitle": { "type": "string", "description": "Milestone title" },
+        "photos": { "type": "array", "description": "Array of original uploaded photos" },
+        "memories": { "type": "array", "description": "Array of timeline memories with photos" },
+        "audioTrackId": { "type": "string", "description": "Audio track selection" },
+        "customAudioUrl": { "type": "string", "description": "Custom audio URL" },
+        "youtubeUrl": { "type": "string", "description": "YouTube link input by user" },
+        "youtubeVideoId": { "type": "string", "description": "Parsed YouTube 11-char video ID" },
+        "uploadedAudioUrl": { "type": "string", "description": "Uploaded audio data URL" },
+        "uploadedAudioName": { "type": "string", "description": "Uploaded audio filename" },
+        "theme": { "type": "string", "maxLength": 30, "description": "Selected visual theme" },
+        "passwordProtected": { "type": "boolean", "description": "Whether passcode is enabled" },
+        "password": { "type": "string", "description": "Secret passcode" },
+        "scratchMessage": { "type": "string", "description": "Scratch reveal message" },
+        "secretNote": { "type": "string", "description": "Secret note" },
+        "openWhenNotes": { "type": "array", "description": "Open when envelopes" },
+        "favoritePlaces": { "type": "array", "description": "Special places on map" },
+        "reactionsCount": { "type": "number", "description": "Number of reactions" },
+        "published": { "type": "boolean", "description": "Whether gift is published and viewable by recipient" },
+        "uniqueSlug": { "type": "string", "maxLength": 64, "description": "Unique URL slug" },
+        "createdAt": { "type": "string", "description": "ISO timestamp" },
+        "updatedAt": { "type": "string", "description": "ISO timestamp" }
+      },
+      "required": ["ownerId", "recipientName", "senderName", "published"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile details"
+    },
+    "/gifts/{giftId}": {
+      "schema": "Gift",
+      "description": "Gifts created and published by users"
+    }
+  }
+}
